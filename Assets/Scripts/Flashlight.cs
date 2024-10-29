@@ -5,16 +5,28 @@ using UnityEngine;
 public class Flashlight : MonoBehaviour
 {
     [SerializeField] GameObject flashLight;
-    
+    [SerializeField] AudioClip click;
+    [SerializeField] AudioSource source;
+
+    private void Start()
+    {
+        
+    }
+
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            flashLight.SetActive(true);
-        }
-        if (Input.GetKeyUp(KeyCode.F))
-        {
-            flashLight.SetActive(false);
+            if (flashLight.activeSelf)
+            {
+                flashLight.gameObject.SetActive(false);
+                source.PlayOneShot(click);
+            }
+            else if (!flashLight.activeSelf)
+            {
+                flashLight.gameObject.SetActive(true);
+                source.PlayOneShot(click);
+            }
         }
     }
 }
