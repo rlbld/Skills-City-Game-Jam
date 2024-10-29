@@ -36,7 +36,7 @@ public class Timer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("battery")) 
+        if (other.CompareTag("PowerUp")) 
         {
             remainingTime += 60;
         }

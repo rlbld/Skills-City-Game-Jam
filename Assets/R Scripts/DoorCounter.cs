@@ -19,8 +19,6 @@ public class DoorCounter : MonoBehaviour
     private void DoorCountdown(object sender, EventArgs e)
     {
         remainingDoors--;
-        DoorBehaviour doorBehaviour = GetComponent<DoorBehaviour>();
-        doorBehaviour.OnDoorClosed -= DoorCountdown;
     }
 
     // Update is called once per frame
