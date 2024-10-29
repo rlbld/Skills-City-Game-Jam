@@ -51,8 +51,14 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
-		// cinemachine
-		private float _cinemachineTargetPitch;
+
+        [Header("Audio")]
+        public AudioSource footstepAudioSource; // Reference to the AudioSource
+        private bool isMoving; // Track if the player is moving
+
+
+        // cinemachine
+        private float _cinemachineTargetPitch;
 
 		// player
 		private float _speed;
@@ -108,14 +114,23 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
-		}
+
+            // Ensure audio source is not playing at start
+            if (footstepAudioSource != null)
+            {
+                footstepAudioSource.Stop();
+            }
+
+
+        }
 
 		private void Update()
 		{
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
-		}
+            HandleFootstepAudio(); // Check for movement and control audio
+        }
 
 		private void LateUpdate()
 		{
@@ -192,7 +207,12 @@ namespace StarterAssets
 			{
 				// move
 				inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
-			}
+                isMoving = true; // Player is moving
+            }
+			else 
+			{
+                isMoving = false; // Player is not moving
+            }
 
 			// move the player
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
@@ -246,7 +266,23 @@ namespace StarterAssets
 			}
 		}
 
-		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+        private void HandleFootstepAudio()
+        {
+            if (footstepAudioSource == null) return;
+
+            // Play footstep sound if the player is moving and not already playing
+            if (isMoving && !footstepAudioSource.isPlaying)
+            {
+                footstepAudioSource.Play();
+            }
+            // Stop footstep sound if the player is not moving
+            else if (!isMoving && footstepAudioSource.isPlaying)
+            {
+                footstepAudioSource.Stop();
+            }
+        }
+
+        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
 			if (lfAngle < -360f) lfAngle += 360f;
 			if (lfAngle > 360f) lfAngle -= 360f;
