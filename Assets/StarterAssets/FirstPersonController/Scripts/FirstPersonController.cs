@@ -54,6 +54,7 @@ namespace StarterAssets
 
         [Header("Audio")]
         public AudioSource footstepAudioSource; // Reference to the AudioSource
+        public AudioSource pickupAudioSource; // Reference to the pickup AudioSource
         private bool isMoving; // Track if the player is moving
 
 
@@ -265,6 +266,19 @@ namespace StarterAssets
 				_verticalVelocity += Gravity * Time.deltaTime;
 			}
 		}
+        private void OnTriggerEnter(Collider other)
+        {
+            // Check if the object collided with is a power-up or collectible
+            if (other.CompareTag("PowerUp"))
+            {
+                // Play the pickup sound
+                if (pickupAudioSource != null)
+                {
+                    pickupAudioSource.Play();
+                } 
+                
+            }
+        }
 
         private void HandleFootstepAudio()
         {
